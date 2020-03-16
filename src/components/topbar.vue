@@ -3,10 +3,10 @@
     <div class="topbar" :class="navBarFixed == true ? 'navBarWrap' : ''">
       <!-- <img src="../assets/img/logo.png" height="80px" /> -->
       <div class="webtab">
-        <router-link to="login" v-bind:class="{ checked: isNews }"
+        <router-link to="/" v-bind:class="{ checked: isNews }"
           >新闻</router-link
         >
-        <router-link to="register" v-bind:class="{ checked: isData }"
+        <router-link to="/table/1" v-bind:class="{ checked: isData }"
           >数据</router-link
         >
       </div>

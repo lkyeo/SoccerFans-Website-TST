@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <div v-loading="vloading">
     <top-bar></top-bar>
     <div class="body">
       <slide-bar></slide-bar>
-      <container-box></container-box>
+      <!-- <container-box></container-box> -->
+      <router-view v-if="update"></router-view>
       <right-bar></right-bar>
     </div>
   </div>
@@ -21,7 +22,21 @@ export default {
     "right-bar": rightbar
   },
   data() {
-    return {};
+    return {
+      update: true,
+      vloading: false
+    };
+  },
+  methods: {
+    reload() {
+      // 移除组件
+      this.update = false;
+      // 在组件移除后，重新渲染组件
+      // this.$nextTick可实现在DOM 状态更新后，执行传入的方法。
+      this.$nextTick(() => {
+        this.update = true;
+      });
+    }
   }
 };
 </script>

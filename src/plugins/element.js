@@ -10,6 +10,7 @@ import { Link } from "element-ui";
 import { Divider } from "element-ui";
 import { MessageBox } from "element-ui";
 import { Message } from "element-ui";
+import "element-ui/lib/theme-chalk/base.css";
 import {
   Loading,
   InfiniteScroll,
@@ -18,7 +19,31 @@ import {
   Header,
   Aside,
   Main,
-  PageHeader
+  PageHeader,
+  Upload,
+  Dialog,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  Switch,
+  Carousel,
+  CarouselItem,
+  Transfer,
+  Card,
+  Table,
+  TableColumn,
+  Pagination,
+  Select,
+  Option,
+  Tabs,
+  TabPane,
+  InputNumber,
+  ButtonGroup,
+  Popover,
+  Popconfirm,
+  Radio,
+  RadioGroup,
+  RadioButton
 } from "element-ui";
 
 Vue.use(Button);
@@ -42,3 +67,27 @@ Vue.use(Header);
 Vue.use(Aside);
 Vue.use(Main);
 Vue.use(PageHeader);
+Vue.use(Upload);
+Vue.use(Dialog);
+Vue.use(Dropdown);
+Vue.use(DropdownItem);
+Vue.use(DropdownMenu);
+Vue.use(Switch);
+Vue.use(Carousel);
+Vue.use(CarouselItem);
+Vue.use(Transfer);
+Vue.use(Card);
+Vue.use(Table);
+Vue.use(TableColumn);
+Vue.use(Pagination);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(Tabs);
+Vue.use(TabPane);
+Vue.use(InputNumber);
+Vue.use(ButtonGroup);
+Vue.use(Popover);
+Vue.use(Popconfirm);
+Vue.use(Radio);
+Vue.use(RadioGroup);
+Vue.use(RadioButton);

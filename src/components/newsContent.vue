@@ -1,30 +1,47 @@
 <template>
   <div class="content">
-    <span
-      >巴塞罗那俱乐部目前正在度过新世纪来最糟糕的时期，《纽约时报》撰文进行了评论，他们认为巴萨失去了初心，他们已经从21世纪最佳俱乐部沦为了一家电视剧制作公司。
-    </span>
-    <el-image style="width: 100%" :src="url" :fit="scale - down"></el-image>
-    <span>
-      评论称，巴萨最近爆发的一系列危机并非偶然：解雇巴尔韦德、对哈维的盲目邀请、阿比达尔和梅西间的龃龉、混乱的冬窗引援以及前段时期爆发的公关门事件。
-    </span>
-    <span>
-      事实上，在近些年的成功背后，巴萨已经经历了太多奇怪的事情：内马尔来到球队时不透明转会费引发的洗钱丑闻、罗塞尔入狱、引入青年球员违规被罚等等，这些都是在取得成功后遗忘了初心的种种体现。
-    </span>
-    <span>
-      《纽约时报》写道，巴萨本来以艺术足球闻名，又以惊人的控制力成为21世纪最佳球队。但他们之后的管理表现出种种不专业。尽管如此，梅西和他的队友们依旧在努力获得许多成就，这是值得赞扬的。但同样不可避免的是，在某些时候，他们的闪光将无法再掩盖俱乐部的失败。
-    </span>
-    <span>
-      《纽约时报》总结道，巴塞罗那不能再以这种方式行事，尽管他们在商业上取得了巨大成功，但同时他们也丢掉了初心：拉玛西亚青训球员的流失、不再为球迷们带来快乐。他们已经从21世纪最佳俱乐部沦为了一家电视剧制作公司。同时，不口否认的是梅西也在老去，他也不能只身孤单挽大厦于将倾。
-    </span>
+    <el-carousel height="420px">
+      <el-carousel-item v-for="(img, index) in imgList" :key="index">
+        <el-image
+          style="height:420px"
+          v-bind:src="img.url"
+          fit="cover"
+        ></el-image>
+      </el-carousel-item>
+    </el-carousel>
+    <span v-for="(text, i) in textList" :key="i">{{ text }} </span>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      url:
-        "https://img1.qunliao.info/fastdfs4/M00/05/DE/ChMf8F5WIoWAeKj6AAZ34Yv26mk328.jpg?watermark/1/image/aHR0cDovL2ltZzEuZG9uZ3FpdWRpLmNvbS9mYXN0ZGZzMi9NMDAvMkEvRTIvQ2hPcU0xb1MtZVdBUERxM0FBQkE1VWdyQlQ4MTQyLnBuZz9pbWFnZVZpZXcyLzAvdy8zNDE=/dissolve/100/dx/40/dy/13"
+      imgList: [],
+      textList: []
     };
+  },
+  mounted: function() {
+    this.newsRender();
+  },
+  methods: {
+    newsRender() {
+      let data = {
+        newsid: this.$route.params.newsid
+      };
+      this.$ajax
+        .post("api/getNewsContent.php", this.$qs.stringify(data))
+        .then(res => {
+          // console.log(res);
+
+          if (res["data"]["status"] == "101") {
+            this.textList = Object.values(res["data"].text);
+            this.imgList = res["data"].img;
+            // console.log(this.imgList);
+          } else {
+            console.log(res);
+          }
+        });
+    }
   }
 };
 </script>

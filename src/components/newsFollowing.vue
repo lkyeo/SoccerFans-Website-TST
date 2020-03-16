@@ -1,40 +1,6 @@
 <template>
   <div class="container" id="content">
     <ul class="list clearfix">
-      <li
-        v-for="(news, i) in newsHotList"
-        v-bind:key="'hot' + i"
-        class="list-item list-hot"
-      >
-        <el-image
-          style="width: 160px; height: 105px"
-          :src="news.cover"
-          fit="cover"
-        ></el-image>
-        <div class="newsinfo">
-          <div class="content">
-            <div class="link">
-              <router-link
-                :to="{ path: '/news/' + news.newsid }"
-                style="text-decoration:none"
-                ><span>
-                  {{ news.title }}
-                </span>
-              </router-link>
-            </div>
-          </div>
-          <div class="foot">
-            <div class="top">
-              <span>头条</span>
-            </div>
-            <div class="common">
-              <span>@{{ news.club }}</span>
-              <el-divider direction="vertical"></el-divider>
-              <span>评论:{{ news.commentNum }}</span>
-            </div>
-          </div>
-        </div>
-      </li>
       <li v-for="(news, i) in newsList" v-bind:key="i" class="list-item">
         <el-image
           style="width: 160px; height: 105px"
@@ -77,20 +43,35 @@ export default {
     }
     next();
   },
+
   data() {
     return {
+      uid: null,
       loading: false,
       noMore: false,
       newsList: [],
-      newsHotList: [],
       current: 0
     };
   },
   mounted() {
-    window.addEventListener("scroll", this.scrollBottom, true);
-    this.firstRender();
+    this.checkUser();
   },
   methods: {
+    checkUser() {
+      this.uid = this.$cookies.get("uid");
+      if (this.uid == null) {
+        this.$parent.vloading = true;
+        this.$msg.error("你还没有登录,即将返回主页！");
+        setTimeout(() => {
+          this.$router.push("/");
+          this.$parent.vloading = false;
+        }, 1200);
+      } else {
+        this.firstRender();
+        window.addEventListener("scroll", this.scrollBottom, true);
+      }
+    },
+
     scrollBottom() {
       // 滚动到页面底部时
       const el = document.getElementById("content");
@@ -106,15 +87,6 @@ export default {
       }
     },
     firstRender() {
-      this.$ajax.get("api/newsHotList.php").then(res => {
-        // console.log(res);
-        if (res["data"].status == "101") {
-          // console.log(res);
-          for (var i in res["data"].data) {
-            this.newsHotList.push(res["data"].data[i]);
-          }
-        }
-      });
       this.load(12);
     },
     load(num) {
@@ -127,14 +99,22 @@ export default {
         let data = {
           num: num,
           current: this.current,
-          ch: 0
+          uid: this.uid
         };
-        // console.log(data);
+        console.log(data);
         this.$ajax
-          .post("api/newsList.php", this.$qs.stringify(data))
+          .post("api/newsFollowingRender.php", this.$qs.stringify(data))
           .then(res => {
-            // console.log(res);
+            console.log(res);
             if (res["data"].status == "201") {
+              this.$msg("先去个人中心关注一个球队吧");
+
+              this.loading = false;
+              this.noMore = true;
+            } else if (res["data"].status == "202") {
+              if (this.current == 0) {
+                this.$msg("关注的球队暂时还没有新闻");
+              }
               this.loading = false;
               this.noMore = true;
             } else if (res["data"].status == "101") {

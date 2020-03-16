@@ -1,40 +1,6 @@
 <template>
   <div class="container" id="content">
     <ul class="list clearfix">
-      <li
-        v-for="(news, i) in newsHotList"
-        v-bind:key="'hot' + i"
-        class="list-item list-hot"
-      >
-        <el-image
-          style="width: 160px; height: 105px"
-          :src="news.cover"
-          fit="cover"
-        ></el-image>
-        <div class="newsinfo">
-          <div class="content">
-            <div class="link">
-              <router-link
-                :to="{ path: '/news/' + news.newsid }"
-                style="text-decoration:none"
-                ><span>
-                  {{ news.title }}
-                </span>
-              </router-link>
-            </div>
-          </div>
-          <div class="foot">
-            <div class="top">
-              <span>头条</span>
-            </div>
-            <div class="common">
-              <span>@{{ news.club }}</span>
-              <el-divider direction="vertical"></el-divider>
-              <span>评论:{{ news.commentNum }}</span>
-            </div>
-          </div>
-        </div>
-      </li>
       <li v-for="(news, i) in newsList" v-bind:key="i" class="list-item">
         <el-image
           style="width: 160px; height: 105px"
@@ -69,26 +35,27 @@
 </template>
 <script>
 export default {
-  beforeRouteEnter(to, from, next) {
-    if (from.name == "news") {
-      to.meta.keepAlive = true;
-    } else {
-      to.meta.keepAlive = false;
-    }
-    next();
-  },
   data() {
     return {
       loading: false,
       noMore: false,
       newsList: [],
-      newsHotList: [],
-      current: 0
+      current: 0,
+      ch: this.$route.params.ch
     };
   },
   mounted() {
     window.addEventListener("scroll", this.scrollBottom, true);
     this.firstRender();
+  },
+  watch: {
+    $route(to, from) {
+      //监听路由是否变化
+      if (this.$route.params.ch) {
+        this.ch = this.$route.params.ch;
+        this.$parent.reload();
+      }
+    }
   },
   methods: {
     scrollBottom() {
@@ -106,15 +73,6 @@ export default {
       }
     },
     firstRender() {
-      this.$ajax.get("api/newsHotList.php").then(res => {
-        // console.log(res);
-        if (res["data"].status == "101") {
-          // console.log(res);
-          for (var i in res["data"].data) {
-            this.newsHotList.push(res["data"].data[i]);
-          }
-        }
-      });
       this.load(12);
     },
     load(num) {
@@ -127,9 +85,8 @@ export default {
         let data = {
           num: num,
           current: this.current,
-          ch: 0
+          ch: this.ch
         };
-        // console.log(data);
         this.$ajax
           .post("api/newsList.php", this.$qs.stringify(data))
           .then(res => {
@@ -161,22 +118,16 @@ export default {
   display: inline-block;
   overflow-x: hidden;
   overflow-y: scroll;
+  // .clearfix:after {
+  //   // 清除浮动
+  //   content: "";
+  //   display: block;
+  //   height: 0;
+  //   clear: both;
+  //   visibility: hidden;
+  // }
   .list {
     margin-bottom: 0px;
-    .list-hot {
-      .newsinfo .content .link {
-        span {
-          color: #23bbbb;
-        }
-      }
-      .foot {
-        display: flex;
-        justify-content: space-between;
-        span {
-          color: #59d1d2;
-        }
-      }
-    }
   }
 
   li {
@@ -212,7 +163,6 @@ export default {
       }
     }
   }
-
   .loading {
     display: block;
     padding: 16px;

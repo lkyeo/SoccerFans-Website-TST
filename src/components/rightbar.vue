@@ -2,13 +2,12 @@
   <div class="rightbar">
     <!-- 搜索框 -->
     <div class="search">
-      <el-form ref="form" :model="searchForm">
-        <el-input
-          v-model="searchForm.keyword"
-          placeholder=""
-          suffix-icon="el-icon-search"
-        ></el-input>
-      </el-form>
+      <el-input
+        @keyup.enter.native="search"
+        v-model="keyword"
+        placeholder=""
+        suffix-icon="el-icon-search"
+      ></el-input>
     </div>
     <!-- 用户区域 -->
     <div class="userarea">
@@ -19,23 +18,15 @@
       <div class="user userdiv" v-show="showUser">
         <span class="info">欢迎你，{{ username }}</span>
         <div class="operate">
-          <el-link href="https://element.eleme.io" target="_blank"
-            >个人中心</el-link
-          >
+          <el-link @click="toUsercenter">个人中心</el-link>
           <el-divider direction="vertical"></el-divider>
-          <el-link href="https://element.eleme.io" target="_blank"
-            >我的收藏</el-link
-          >
+          <el-link @click="toNewsfav">我的收藏</el-link>
         </div>
         <div class="quit">
           <el-link type="info" @click="clearUser">退出登录</el-link>
         </div>
       </div>
     </div>
-    <!-- 热点新闻 -->
-    <div class="hotnews"></div>
-    <!-- 精彩图片 -->
-    <div class="hotpics"></div>
     <!-- 友情链接 -->
     <div class="links"></div>
     <!-- 网站信息 -->
@@ -46,9 +37,7 @@
 export default {
   data() {
     return {
-      searchForm: {
-        keyword: ""
-      },
+      keyword: "",
       username: null,
       showLogin: false,
       showUser: false
@@ -76,6 +65,17 @@ export default {
       this.$cookies.remove("username");
       this.$msg("已退出当前用户");
       this.checkUser();
+      this.$router.go(0);
+    },
+    toUsercenter() {
+      this.$router.push("/usercenter");
+    },
+    toNewsfav() {
+      this.$router.push("/usercenter/newsfav");
+    },
+    search() {
+      console.log(this.keyword);
+      this.$router.push({ name: "search", query: { keyword: this.keyword } });
     }
   }
 };
@@ -90,7 +90,7 @@ export default {
     margin: 16px 0px;
   }
   .userarea {
-    width: 100%;
+    // width: 318px;
     height: 220px;
     border: 1px solid #dcdfe6;
     border-radius: 3px;

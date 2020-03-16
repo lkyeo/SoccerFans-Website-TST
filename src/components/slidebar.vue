@@ -1,28 +1,28 @@
 <template>
   <div class="slidebar">
-    <el-menu default-active="1" class="el-menu-vertical-demo" mode="vertical">
-      <el-menu-item index="1">
+    <el-menu class="el-menu-vertical-demo" mode="vertical" router>
+      <el-menu-item index="/">
         <span slot="title">热门</span>
       </el-menu-item>
-      <el-menu-item index="2">
+      <el-menu-item v-if="uid" index="/following">
         <span slot="title">关注</span>
       </el-menu-item>
-      <el-menu-item index="3">
+      <el-menu-item index="/ch/1">
         <span slot="title">中超</span>
       </el-menu-item>
-      <el-menu-item index="4">
+      <el-menu-item index="/ch/2">
         <span slot="title">英超</span>
       </el-menu-item>
-      <el-menu-item index="5">
+      <el-menu-item index="/ch/3">
         <span slot="title">西甲</span>
       </el-menu-item>
-      <el-menu-item index="6">
+      <el-menu-item index="/ch/4">
         <span slot="title">德甲</span>
       </el-menu-item>
-      <el-menu-item index="7">
+      <el-menu-item index="/ch/5">
         <span slot="title">意甲</span>
       </el-menu-item>
-      <el-menu-item index="8">
+      <el-menu-item index="/ch/6">
         <span slot="title">法甲</span>
       </el-menu-item>
     </el-menu>
@@ -31,8 +31,11 @@
 <script>
 export default {
   data() {
-    return {};
-  }
+    return {
+      uid: this.$cookies.get("uid")
+    };
+  },
+  methods: {}
 };
 </script>
 <style lang="less" scoped>
